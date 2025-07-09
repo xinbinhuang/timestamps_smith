@@ -1,3 +1,3 @@
-# OO Timestamps
+# Timestamps Smith
 
-Simple timestamps generator for Option Omega backtesting.
+Simple timestamps generator for [Option Omega](https://optionomega.com/) backtesting.

@@ -36,7 +36,7 @@ def convert_for_download(df):
     return df.to_csv(index=False).encode("utf-8")
 
 def main():
-    st.title("📅 OO Timestamps Generator")
+    st.title("📅 🔨 Timestamps Smith")
     st.markdown("Generate timestamps between 9:35 AM and 3:55 PM")
     
     # Date range selector
