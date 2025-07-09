@@ -90,7 +90,7 @@ def main():
             st.download_button(
                 label="📥 Download CSV",
                 data=convert_for_download(df),
-                file_name=f"timestamps_{start_date}_to_{end_date}.csv",
+                file_name=f"timestamps_{start_date}_to_{end_date}_{interval_mins}mins.csv",
                 mime="text/csv",
                 help="Download the generated timestamps as a CSV file"
             )
