@@ -1,30 +1,33 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 
+TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M"
 
-def generate_timestamps(start_date, end_date, interval_min):
-    """Generate 5-minute interval timestamps between 9:35 AM and 3:55 PM for each day"""
+def generate_timestamps(start_date: date, end_date: date, interval_min: int, selected_months=None, selected_weekdays=None):
+    """Generate timestamps between 9:35 AM and 3:55 PM for each day, filtered by month and weekday"""
     timestamps = []
     
-    # Convert to datetime objects if they're date objects
-    if hasattr(start_date, 'date'):
-        start_date = start_date.date()
-    if hasattr(end_date, 'date'):
-        end_date = end_date.date()
-    
     current_date = start_date
-    
     while current_date <= end_date:
+        # Check if current date's month is in selected months
+        if selected_months and current_date.month not in selected_months:
+            current_date += timedelta(days=1)
+            continue
+            
+        # Check if current date's weekday is in selected weekdays (0=Monday, 6=Sunday)
+        if selected_weekdays and current_date.weekday() not in selected_weekdays:
+            current_date += timedelta(days=1)
+            continue
+        
         # Start time: 9:35 AM
         start_time = datetime.combine(current_date, datetime.min.time().replace(hour=9, minute=35))
         # End time: 3:55 PM
-        end_time = datetime.combine(current_date, datetime.min.time().replace(hour=15, minute=55))
+        end_time = datetime.combine(current_date, datetime.min.time().replace(hour=15, minute=59))
         
         current_time = start_time
-        
         while current_time <= end_time:
-            timestamps.append(current_time.strftime("%Y-%m-%d %H:%M"))
+            timestamps.append(current_time.strftime(TIMESTAMP_FORMAT))
             current_time += timedelta(minutes=interval_min)
         
         current_date += timedelta(days=1)
@@ -63,6 +66,31 @@ def main():
             help="Timestamp intervals (mins)"
         )
     
+    # Filters
+    col4, col5 = st.columns(2)
+    
+    with col4:
+        selected_months = st.multiselect(
+            "Select Months",
+            options=list(range(1, 13)),
+            format_func=lambda x: datetime(2023, x, 1).strftime("%B"),
+            default=list(range(1, 13)),
+            help="Select which months to include"
+        )
+    
+    with col5:
+        weekday_options = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        selected_weekdays_names = st.multiselect(
+            "Select Days of Week",
+            options=weekday_options,
+            default=weekday_options,
+            help="Select which days of the week to include"
+        )
+        
+        # Convert weekday names to numbers (0=Monday, 6=Sunday)
+        weekday_mapping = {name: i for i, name in enumerate(weekday_options)}
+        selected_weekdays = [weekday_mapping[name] for name in selected_weekdays_names]
+    
     # Validate date range
     if start_date > end_date:
         st.error("Start date must be before or equal to end date!")
@@ -71,7 +99,7 @@ def main():
     # Generate timestamps button
     if st.button("Generate Timestamps", type="primary"):
         with st.spinner("Generating timestamps..."):
-            timestamps = generate_timestamps(start_date, end_date, interval_mins)
+            timestamps = generate_timestamps(start_date, end_date, interval_mins, selected_months, selected_weekdays)
         
         if timestamps:
             # Create DataFrame
@@ -81,6 +109,14 @@ def main():
             st.success(f"Generated {len(timestamps)} timestamps")
             st.info(f"Date range: {start_date} to {end_date}")
             st.info(f"Time range: 9:35 AM to 3:55 PM ({interval_mins}-minute intervals)")
+            
+            # Display filter info
+            if len(selected_months) < 12:
+                month_names = [datetime(2023, m, 1).strftime("%B") for m in selected_months]
+                st.info(f"Months: {', '.join(month_names)}")
+            
+            if len(selected_weekdays_names) < 7:
+                st.info(f"Days: {', '.join(selected_weekdays_names)}")
             
             # Show preview
             st.subheader("Preview (First 20 rows)")
