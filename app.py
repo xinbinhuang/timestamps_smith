@@ -5,24 +5,25 @@ from datetime import datetime, date, timedelta
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M"
 
 def generate_timestamps(start_date: date, end_date: date, interval_min: int, selected_months=None, selected_weekdays=None):
-    """Generate timestamps between 9:35 AM and 3:55 PM for each day, filtered by month and weekday"""
+    """Generate timestamps with 9:32 AM entry and 9:35-3:59 PM intervals for each day, filtered by month and weekday"""
     timestamps = []
     
     current_date = start_date
     while current_date <= end_date:
-        # Check if current date's month is in selected months
         if selected_months and current_date.month not in selected_months:
             current_date += timedelta(days=1)
             continue
             
-        # Check if current date's weekday is in selected weekdays (0=Monday, 6=Sunday)
         if selected_weekdays and current_date.weekday() not in selected_weekdays:
             current_date += timedelta(days=1)
             continue
         
-        # Start time: 9:35 AM
+        # Add 9:32 AM timestamp
+        open_timestamp = datetime.combine(current_date, datetime.min.time().replace(hour=9, minute=32))
+        timestamps.append(open_timestamp.strftime(TIMESTAMP_FORMAT))
+
+        # Generate interval timestamps from 9:35 AM to 3:59 PM
         start_time = datetime.combine(current_date, datetime.min.time().replace(hour=9, minute=35))
-        # End time: 3:55 PM
         end_time = datetime.combine(current_date, datetime.min.time().replace(hour=15, minute=59))
         
         current_time = start_time
