@@ -33,15 +33,9 @@ def generate_timestamps(
         if selected_weekdays and current_date.weekday() not in selected_weekdays:
             continue
 
-        # Add 9:32 AM timestamp
-        open_timestamp = datetime.combine(
-            current_date, datetime.min.time().replace(hour=9, minute=32)
-        )
-        timestamps.append(open_timestamp.strftime(TIMESTAMP_FORMAT))
-
         # Generate interval timestamps from 9:35 AM to 3:59 PM
         start_time = datetime.combine(
-            current_date, datetime.min.time().replace(hour=9, minute=35)
+            current_date, datetime.min.time().replace(hour=9, minute=30)
         )
         end_time = datetime.combine(
             current_date, datetime.min.time().replace(hour=15, minute=59)
@@ -49,6 +43,9 @@ def generate_timestamps(
 
         current_time = start_time
         while current_time <= end_time:
+            # if current_time is exactly 9:30 AM, change it to 9:32 AM
+            if current_time.hour == 9 and current_time.minute == 30:
+                current_time += timedelta(minutes=2)
             timestamps.append(current_time.strftime(TIMESTAMP_FORMAT))
             current_time += timedelta(minutes=interval_min)
 
