@@ -328,7 +328,7 @@ def main():
                 sorted_dates = sorted(list(unique_dates))
                 dates_string = ",".join(sorted_dates)
 
-                st.subheader(f"📅 Selected Dates ({len(sorted_dates)} dates in ISO format)")
+                st.subheader(f"📅 Selected Dates - ISO format ({len(sorted_dates)} dates)")
                 st.code(dates_string, language=None, wrap_lines=True)
 
             else:
