@@ -1,7 +1,7 @@
 [project]
 name = "oo-timestamps"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple timestamps generator for Option Omega backtesting."
 readme = "README.md"
 requires-python = ">=3.11.6"
 dependencies = [
