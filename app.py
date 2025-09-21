@@ -235,7 +235,7 @@ def main():
         return
 
     # Show short weeks button
-    if st.button("🗓️ Show Short Weeks with Holidays"):
+    if st.button("Show Short Weeks with Holidays", icon="🗓️"):
         with st.spinner("Finding short weeks..."):
             short_weeks = get_short_weeks_with_holidays(start_date, end_date)
         
@@ -261,11 +261,10 @@ def main():
         else:
             st.info("No short weeks found in the selected date range.")
 
-    # Generate timestamps button
+    st.subheader("Generate Dates/Timestamps")
     col_gen1, col_gen2 = st.columns(2)
-
     with col_gen1:
-        if st.button("Generate Timestamps", type="primary"):
+        if st.button("Timestamps", icon="⏱️"):
             with st.spinner("Generating timestamps..."):
                 timestamps = generate_timestamps(
                     start_date, end_date, interval_mins, selected_months, selected_weekdays,
@@ -310,7 +309,7 @@ def main():
                 st.warning("No timestamps generated. Please check your date range.")
 
     with col_gen2:
-        if st.button("📅 Show Dates Only"):
+        if st.button("Dates (ISO format)", icon="📅"):
             with st.spinner("Generating dates..."):
                 timestamps = generate_timestamps(
                     start_date, end_date, interval_mins, selected_months, selected_weekdays,
@@ -328,7 +327,7 @@ def main():
                 sorted_dates = sorted(list(unique_dates))
                 dates_string = ",".join(sorted_dates)
 
-                st.subheader(f"📅 Selected Dates - ISO format ({len(sorted_dates)} dates)")
+                st.subheader(f"📅 {len(sorted_dates)} dates")
                 st.code(dates_string, language=None, wrap_lines=True)
 
             else:
