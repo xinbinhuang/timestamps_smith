@@ -179,14 +179,15 @@ def main():
     # Date range selector
     col1, col2, col3 = st.columns(3)
 
+    today = datetime.now().date()
     with col1:
         start_date = st.date_input(
-            "Start Date", value=datetime.now().date(), help="Select the starting date"
+            "Start Date", value=today - timedelta(days=365), help="Select the starting date"
         )
 
     with col2:
         end_date = st.date_input(
-            "End Date", value=datetime.now().date(), help="Select the ending date"
+            "End Date", value=today, help="Select the ending date"
         )
 
     with col3:
